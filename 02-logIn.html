@@ -29,7 +29,6 @@
           const result = document.getElementById("signup");
           const username = document.getElementById("username").value.trim();
           const password = document.getElementById("password").value.trim();
-          localStorage.setItem("token", data.data.token);
 
           const loginData = { username, password };
 
@@ -55,7 +54,8 @@
             }
 
             const data = await res.json();
-
+            localStorage.setItem("token", data.data.token);
+            
             result.textContent =
               data.data.user.nickname +
               "님의 로그인 성공!\n토큰 : " +
