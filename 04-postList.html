@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>게시글 목록</title>
+  </head>
+  <body>
+    <h2>게시글 목록</h2>
+
+    <ul id="post-list"></ul>
+    <p id="message">불러오는 중...</p>
+
+    <script>
+      const apiMain = "https://api.fullstackfamily.com/api/edu/ws-7c1d4f";
+      const postList = document.getElementById("post-list");
+      const message = document.getElementById("message");
+      const token = localStorage.getItem("token");
+
+      async function loadPosts() {
+        try {
+          const res = await fetch(`${apiMain}/posts`);
+          console.log(res);
+
+          if (!res.ok) {
+            throw new Error("HTTP 오류: " + res.status);
+          }
+
+          const resJson = await res.json();
+          const posts = resJson.data.content;
+
+          if (posts.length === 0) {
+            message.textContent = "게시글이 없습니다.";
+            return;
+          }
+
+          message.textContent = "";
+
+          for (let i = 0; i < posts.length; i++) {
+            const post = posts[i];
+
+            const li = document.createElement("li"); 
+
+            const link = document.createElement("a");
+            link.href = "detail.html?id=" + post.id; 
+            link.textContent = post.title; 
+
+            const info = document.createElement("div");
+            info.textContent =
+              post.authorNickname +
+              " | 조회 " +
+              post.viewCount +
+              " | 댓글 " +
+              post.commentCount;
+            
+            const preview = document.createElement("div");
+            preview.textContent = post.contentPreview;
+
+            li.appendChild(link);
+            li.appendChild(info);
+            li.appendChild(preview); 
+            postList.appendChild(li); 
+          }
+        } catch (error) {
+          message.style.color = "red";
+          message.textContent = "에러 발생: " + error.message;
+        }
+      }
+
+      loadPosts();
+    </script>
+  </body>
+</html>
