@@ -1,0 +1,134 @@
+/* boardCreate.css */
+
+/* 전체 배경 및 폰트 설정 */
+body {
+  font-family:
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    sans-serif;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 20px;
+  margin: 0;
+  color: #333;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #222;
+  margin-bottom: 30px;
+}
+
+/* 폼 컨테이너 */
+form,
+body > h3,
+#writer {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* 제목(h3) 스타일 */
+h3 {
+  font-size: 1rem;
+  margin: 20px 0 8px 0;
+  color: #555;
+}
+
+/* 입력 필드 공통 스타일 (input, textarea) */
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+/* 작성자 필드 (Read-only 스타일) */
+#writer {
+  background-color: #eee;
+  color: #777;
+  cursor: not-allowed;
+  margin-bottom: 10px;
+}
+
+/* 포커스 시 효과 */
+input[type="text"]:focus,
+textarea:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* 본문 텍스트 영역 */
+textarea {
+  height: 300px;
+  resize: vertical; /* 사용자가 높이 조절 가능 */
+  line-height: 1.6;
+}
+
+/* 버튼 컨테이너 */
+br + button,
+#resetBtn,
+#draftBtn {
+  margin-top: 20px;
+}
+
+/* 버튼 공통 스타일 */
+button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    transform 0.1s active,
+    background-color 0.2s;
+  border: none;
+}
+
+/* 초기화 버튼 */
+#resetBtn {
+  background-color: #e0e0e0;
+  color: #666;
+  margin-right: 10px;
+}
+
+#resetBtn:hover {
+  background-color: #d5d5d5;
+}
+
+/* 글쓰기(발행) 버튼 */
+#draftBtn {
+  background-color: #4a90e2;
+  color: white;
+  flex: 1;
+}
+
+#draftBtn:hover {
+  background-color: #357abd;
+}
+
+#draftBtn:active {
+  transform: scale(0.98);
+}
+
+/* 모바일 대응 */
+@media (max-width: 480px) {
+  body {
+    padding: 20px;
+  }
+
+  button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
