@@ -40,15 +40,15 @@
             nickname: /^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/,
           };
 
-          if (!rules.username.test(postData.username)) {
+          if (!rules.username.test(userData.username)) {
             alert("아이디는 4~20자의 영문/숫자여야 합니다.");
             return;
           }
-          if (!rules.password.test(postData.password)) {
+          if (!rules.password.test(userData.password)) {
             alert("비밀번호는 4~20자여야 합니다.");
             return;
           }
-          if (!rules.nickname.test(postData.nickname)) {
+          if (!rules.nickname.test(userData.nickname)) {
             alert("닉네임은 한글/영문/숫자 포함 2~20자여야 합니다.");
             return;
           }
