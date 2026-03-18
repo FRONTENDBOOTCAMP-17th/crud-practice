@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POST 예제 2 - 로그인</title>
+  </head>
+  <body>
+    <main>
+      <h1>로그인 실습</h1>
+      <div class="form-input">
+        <input type="text" id="username" placeholder="아이디를 입력해주세요." />
+      </div>
+      <div class="form-input">
+        <input
+          type="password"
+          id="password"
+          placeholder="비밀번호를 입력해주세요."
+        />
+      </div>
+      <button type="submit" id="submitBtn">로그인</button>
+      <p id="signup"></p>
+    </main>
+
+    <script>
+      document
+        .getElementById("submitBtn")
+        .addEventListener("click", async () => {
+          const result = document.getElementById("signup");
+          const username = document.getElementById("username").value.trim();
+          const password = document.getElementById("password").value.trim();
+          localStorage.setItem("token", data.data.token);
+
+          const loginData = { username, password };
+
+          if (!loginData.username || !loginData.password) {
+            result.textContent = "모든 입력칸을 입력해주세요.";
+            return;
+          }
+
+          try {
+            result.textContent = "로그인 중...";
+
+            const res = await fetch(
+              "https://api.fullstackfamily.com/api/edu/ws-7c1d4f/auth/login",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(loginData),
+              },
+            );
+
+            if (!res.ok) {
+              throw new Error("HTTP 오류: " + res.status);
+            }
+
+            const data = await res.json();
+
+            result.textContent =
+              data.data.user.nickname +
+              "님의 로그인 성공!\n토큰 : " +
+              data.data.token;
+            result.style.color = "green";
+          } catch (error) {
+            result.textContent = "오류가 발생하였습니다 : " + error.message;
+            result.style.color = "red";
+          }
+        });
+    </script>
+  </body>
+</html>
