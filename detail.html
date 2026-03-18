@@ -79,13 +79,28 @@
         try {
           const userCheck = await fetch(
             "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/my",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            },
           );
 
           if (!userCheck.ok) {
             throw new Error("HTTP 오류: " + userCheck.status);
           }
-          const userCheckJson = await userCheck.json();
-          const isMyPost = userCheckJson.data.id === postId;
+          const { success, message, data } = await userCheck.json();
+
+          let isMyPost = false;
+
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].id === Number.parseInt(postId)) {
+              isMyPost = true;
+              break;
+            }
+          }
 
           const res = await fetch(
             "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/" + postId,
@@ -99,8 +114,7 @@
           const post = resJson.data;
           const [date, time] = post.createdAt.split("T");
 
-          postEl.innerHTML =
-            `
+          postEl.innerHTML = `
             <div class="post-box">
               <div class="post-title">${post.title}</div>
               <div class="post-meta">
@@ -110,30 +124,39 @@
               </div>
               <div class="post-date">🕐 ${date} ${time}</div>
               <div class="post-content">${post.content}</div>
+            </div>
+          `;
 
-          ` + isMyPost
-              ? `<button id="editPost">수정하기</button>
-          <button id="deletePost">삭제하기</button></div>`
-              : `</div>`;
+          if (isMyPost) {
+            const frag = document.createDocumentFragment();
+
+            const editPost = document.createElement("button");
+            editPost.id = "editPost";
+            editPost.textContent = "수정하기";
+            const deletePost = document.createElement("button");
+            deletePost.id = "deletePost";
+            deletePost.textContent = "삭제하기";
+
+            editPost.addEventListener("click", function () {
+              localStorage.setItem("title", post.title);
+              localStorage.setItem("content", post.content);
+              window.location.replace(`/editPost.html?id=${postId}`);
+            });
+
+            deletePost.addEventListener("click", function () {});
+
+            frag.appendChild(editPost);
+            frag.appendChild(deletePost);
+
+            const postBox = document.querySelector(".post-box");
+            postBox.appendChild(frag);
+          }
         } catch (error) {
           postEl.innerHTML = "<p>에러: " + error.message + "</p>";
         }
       }
 
       document.addEventListener("DOMContentLoaded", loadPost);
-
-      const editPost = document.getElementById("editPost");
-      const deletePost = document.getElementById("deletePost");
-
-      if (!editPost && !deletePost) {
-        return;
-      }
-
-      editPost.addEventListener("click", function () {
-        window.location.replace("/editPost.html");
-      });
-
-      deletePost.addEventListener("click", function () {});
     </script>
   </body>
 </html>
