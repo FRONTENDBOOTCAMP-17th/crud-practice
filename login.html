@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fetch POST 요청</title>
+  </head>
+  <body>
+    <h2>로그인</h2>
+    <input type="text" id="username" placeholder="유저네임" />
+    <input type="password" id="password" placeholder="비밀번호" />
+    <button id="submitBtn">로그인하기</button>
+    <pre id="result"></pre>
+
+    <script>
+      document
+        .getElementById("submitBtn")
+        .addEventListener("click", async () => {
+          const result = document.getElementById("result");
+
+          const loginData = {
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value,
+          };
+
+          try {
+            result.textContent = "전송 중...";
+
+            const res = await fetch(
+              "https://api.fullstackfamily.com/api/edu/ws-1c07e0/auth/login",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(loginData),
+              },
+            );
+
+            if (!res.ok) {
+              throw new Error("HTTP 오류: " + res.status);
+            }
+
+            const data = await res.json();
+            // 로컬스토리지에 토큰 저장
+            localStorage.setItem("token", data.data.token);
+
+            result.textContent =
+              "로그인 성공!\n토큰값: " +
+              data.data.token +
+              "\n\n" +
+              JSON.stringify(data, null, 2);
+            result.style.color = "green";
+          } catch (error) {
+            result.textContent = "에러: " + error.message;
+            result.style.color = "red";
+          }
+        });
+    </script>
+  </body>
+</html>
