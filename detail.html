@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>게시글 상세</title>
+    <style>
+      body {
+        padding: 20px;
+        font-family: sans-serif;
+        background: #f9f9f9;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+      }
+      .post-box {
+        border: 1px solid #e1e4e8;
+        padding: 24px;
+        border-radius: 10px;
+        background-color: #fff;
+      }
+      .post-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 12px;
+      }
+      .post-meta {
+        font-size: 13px;
+        color: #777;
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .post-date {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 20px;
+      }
+      .post-content {
+        font-size: 15px;
+        color: #333;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        border-top: 1px solid #e1e4e8;
+        padding-top: 20px;
+      }
+      .btn-back {
+        display: inline-block;
+        margin-top: 24px;
+        padding: 10px 20px;
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="post">
+        <p>게시글을 불러오는 중입니다...</p>
+      </div>
+      <a href="index.html" class="btn-back">← 목록으로 돌아가기</a>
+    </div>
+
+    <script>
+      const token = localStorage.getItem("token");
+      const postEl = document.getElementById("post");
+      const params = new URLSearchParams(window.location.search);
+      const postId = params.get("id");
+
+      async function loadPost() {
+        if (!postId) {
+          postEl.innerHTML = "<p>잘못된 접근입니다.</p>";
+          return;
+        }
+
+        try {
+          const userCheck = await fetch(
+            "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/my",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+
+          if (!userCheck.ok) {
+            throw new Error("HTTP 오류: " + userCheck.status);
+          }
+          const { success, message, data } = await userCheck.json();
+
+          let isMyPost = false;
+
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].id === Number.parseInt(postId)) {
+              isMyPost = true;
+              break;
+            }
+          }
+
+          const res = await fetch(
+            "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/" + postId,
+          );
+
+          if (!res.ok) {
+            throw new Error("HTTP 오류: " + res.status);
+          }
+
+          const resJson = await res.json();
+          const post = resJson.data;
+          const [date, time] = post.createdAt.split("T");
+
+          postEl.innerHTML = `
+            <div class="post-box">
+              <div class="post-title">${post.title}</div>
+              <div class="post-meta">
+                <span>👤 ${post.authorNickname}</span>
+                <span>👀 조회 ${post.viewCount}</span>
+                <span>💬 댓글 ${post.commentCount}</span>
+              </div>
+              <div class="post-date">🕐 ${date} ${time}</div>
+              <div class="post-content">${post.content}</div>
+            </div>
+          `;
+
+          if (isMyPost) {
+            const frag = document.createDocumentFragment();
+
+            const editPost = document.createElement("button");
+            editPost.id = "editPost";
+            editPost.textContent = "수정하기";
+            const deletePost = document.createElement("button");
+            deletePost.id = "deletePost";
+            deletePost.textContent = "삭제하기";
+
+            editPost.addEventListener("click", function () {
+              localStorage.setItem("title", post.title);
+              localStorage.setItem("content", post.content);
+              window.location.replace(`/editPost.html?id=${postId}`);
+            });
+
+            deletePost.addEventListener("click", async function () {
+              if (!confirm("정말로 삭제하시겠습니까?")) return;
+
+              try {
+                const res = await fetch(
+                  "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/" +
+                    postId,
+                  {
+                    method: "DELETE",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  },
+                );
+
+                if (!res.ok) {
+                  throw new Error("삭제 실패: " + res.status);
+                }
+                alert("삭제가 완료되었습니다.");
+                location.replace("index.html");
+              } catch (error) {
+                postEl.innerHTML = "<p>에러: " + error.message + "</p>";
+              }
+            });
+
+            frag.appendChild(editPost);
+            frag.appendChild(deletePost);
+
+            const postBox = document.querySelector(".post-box");
+            postBox.appendChild(frag);
+          }
+        } catch (error) {
+          postEl.innerHTML = "<p>에러: " + error.message + "</p>";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadPost);
+    </script>
+  </body>
+</html>
