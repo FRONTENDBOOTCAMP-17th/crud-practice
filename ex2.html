@@ -6,21 +6,6 @@
     <title>Fetch POST 요청</title>
   </head>
   <body>
-    <h2>회원가입</h2>
-    <div
-      style="
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        inline-size: 150px;
-      "
-    >
-      <input type="text" id="username" placeholder="아이디" />
-      <input type="password" id="password" placeholder="비밀번호" />
-      <input type="text" id="nickname" placeholder="닉네임" />
-    </div>
-    <button id="submitBtn">회원가입</button>
-    <pre id="result"></pre>
     <h2>로그인</h2>
     <div
       style="
@@ -34,50 +19,9 @@
       <input type="password" id="loginPassword" placeholder="비밀번호" />
     </div>
     <button id="loginBtn">로그인</button>
+    <a href="/ex3.html">회원이 아니라면 회원가입을!!!</a>
     <pre id="loginResult"></pre>
     <script>
-      document
-        .getElementById("submitBtn")
-        .addEventListener("click", async () => {
-          const result = document.getElementById("result");
-
-          const postData = {
-            username: document.getElementById("username").value,
-            password: document.getElementById("password").value,
-            nickname: document.getElementById("nickname").value,
-          };
-
-          try {
-            result.textContent = "전송 중...";
-
-            const res = await fetch(
-              "https://api.fullstackfamily.com/api/edu/ws-dbd822/auth/signup",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(postData),
-              },
-            );
-
-            if (!res.ok) {
-              throw new Error("HTTP 오류: " + res.status);
-            }
-
-            const { data } = await res.json();
-            result.textContent =
-              "회원가입 성공\nID: " +
-              data.id +
-              "\n\nUSERNAME: " +
-              data.username +
-              "\n\nNICKNAME: " +
-              data.nickname;
-            result.style.color = "green";
-          } catch (error) {
-            result.textContent = "에러: " + error.message;
-            result.style.color = "red";
-          }
-        });
-
       document
         .getElementById("loginBtn")
         .addEventListener("click", async () => {
