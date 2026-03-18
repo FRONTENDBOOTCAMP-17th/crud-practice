@@ -37,15 +37,11 @@
       }
     </style>
   </head>
-  <script>
-    const accessToken = localStorage.getItem("jwtToken");
-    if (accessToken === null) {
-      window.location.replace("/ex2.html");
-    }
-  </script>
+  <script></script>
   <body>
     <div class="pageHeader">
       <button id="postBtn">게시글 쓰기</button>
+      <a href="/ex2.html">로그인 하러가기</a>
       <h2>게시글 목록</h2>
     </div>
     <pre id="result"></pre>
@@ -73,6 +69,10 @@
     });
 
     document.getElementById("postBtn").addEventListener("click", async () => {
+      const accessToken = localStorage.getItem("jwtToken");
+      if (accessToken === null) {
+        window.location.replace("/ex2.html");
+      }
       try {
         const res = await fetch(
           "https://api.fullstackfamily.com/api/edu/ws-dbd822/posts",
