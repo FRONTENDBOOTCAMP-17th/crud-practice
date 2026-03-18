@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POST 예제 - 회원가입</title>
+  </head>
+  <body>
+    <main>
+      <div class="form-input">
+        <input type="text" id="username" placeholder="아이디를 입력해주세요." />
+      </div>
+      <div class="form-input">
+        <input
+          type="password"
+          id="password"
+          placeholder="비밀번호를 입력해주세요."
+        />
+      </div>
+      <div class="form-input">
+        <input type="text" id="nickname" placeholder="닉네임을 입력해주세요." />
+      </div>
+      <button type="submit" id="submitBtn">회원가입</button>
+      <p id="result"></p>
+    </main>
+
+    <script>
+      document
+        .getElementById("submitBtn")
+        .addEventListener("click", async () => {
+          const username = document.getElementById("username").value.trim();
+          const password = document.getElementById("password").value.trim();
+          const nickname = document.getElementById("nickname").value.trim();
+          const result = document.getElementById("result");
+
+          const postData = { username, password, nickname };
+
+          if (!postData.username || !postData.password || !postData.nickname) {
+            result.textContent = "모든 입력칸을 입력해주세요.";
+            result.style.color = "red";
+            return;
+          }
+
+          if (postData.password.length < 4) {
+            result.textContent = "비밀번호는 4자리 이상이어야 합니다.";
+            result.style.color = "red";
+            return;
+          }
+
+          try {
+            result.textContent = "가입 중...";
+
+            const res = await fetch(
+              "https://api.fullstackfamily.com/api/edu/ws-7c1d4f/auth/signup",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(postData),
+              },
+            );
+
+            if (!res.ok) {
+              throw new Error("HTTP 오류: " + res.status);
+            }
+
+            const data = await res.json();
+            result.textContent = data.data.nickname + "님의 계정 생성 성공!";
+            result.style.color = "green";
+          } catch (error) {
+            result.textContent = "오류가 발생하였습니다 : " + error.message;
+            result.style.color = "red";
+          }
+        });
+    </script>
+  </body>
+</html>
