@@ -19,6 +19,18 @@
         border-radius: 10px;
         background-color: #fff;
       }
+      #editPost,
+      #deletePost {
+        margin-top: 20px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 1px solid #e1e4e8;
+        transition: all 0.2s;
+        margin-right: 8px; /* 버튼 사이 간격 */
+      }
       .post-title {
         font-size: 22px;
         font-weight: bold;
@@ -55,6 +67,99 @@
         border-radius: 5px;
         font-size: 14px;
       }
+      /* 댓글 섹션 스타일링 */
+      #comments {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #e1e4e8;
+      }
+
+      #comments h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      /* 각 댓글 아이템 박스 */
+      .comment-item {
+        background: #ffffff;
+        padding: 18px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        border: 1px solid #ebedef;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+        transition: transform 0.2s ease;
+      }
+
+      .comment-item:hover {
+        border-color: #d1d5da;
+      }
+
+      /* 댓글 작성자 스타일 */
+      .comment-author {
+        font-weight: 700;
+        font-size: 14px;
+        color: #222;
+        margin-bottom: 4px;
+      }
+
+      /* 댓글 날짜 스타일 (🕐 아이콘 포함) */
+      .comment-date {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+      }
+
+      /* 댓글 본문 내용 스타일 */
+      .comment-content {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #444;
+        word-break: break-all; /* 긴 영문/숫자 깨짐 방지 */
+        white-space: pre-wrap; /* 줄바꿈 유지 */
+      }
+
+      /* 댓글이 없을 때 메시지 */
+      #comments > p {
+        text-align: center;
+        padding: 40px 0;
+        color: #aaa;
+        font-size: 14px;
+      }
+
+      /* 댓글 입력 영역 디자인 (기존 요청 보완) */
+      #commentsPost {
+        width: 100%;
+        min-height: 80px;
+        padding: 15px;
+        margin-top: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        font-family: inherit;
+        font-size: 14px;
+        box-sizing: border-box;
+        resize: vertical;
+      }
+
+      #commentsBtn {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      #commentsBtn:hover {
+        opacity: 0.8;
+      }
     </style>
     <script type="module" src="./detail/detail.js"></script>
   </head>
@@ -63,6 +168,7 @@
       <div id="post">
         <p>게시글을 불러오는 중입니다...</p>
       </div>
+      <h2>댓글</h2>
       <div id="comments"></div>
       <textarea id="commentsPost" placeholder="댓글을 입력해주세요."></textarea>
       <button id="commentsBtn">댓글 등록</button>
