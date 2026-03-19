@@ -1,4 +1,5 @@
 import CheckMyPost from "./CheckMyPost.js";
+import RoadComments from "./RoadComments.js";
 
 const token = localStorage.getItem("token");
 const postEl = document.getElementById("post");
@@ -94,6 +95,10 @@ async function loadPost() {
 }
 
 document.addEventListener("DOMContentLoaded", loadPost);
+document.addEventListener("DOMContentLoaded", async function () {
+  await RoadComments(postId);
+});
+
 commentsBtn.addEventListener("click", async function () {
   if (commentsPost.value.length === 0) {
     alert("댓글 내용을 입력해주세요!");
@@ -116,9 +121,12 @@ commentsBtn.addEventListener("click", async function () {
         body: JSON.stringify(data),
       },
     );
+
     if (!resComment.ok) {
       throw new Error("에러 : " + resComment.status);
     }
+
+    location.reload();
   } catch (error) {
     console.log("에러 메세지" + error.message);
   }
