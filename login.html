@@ -3,8 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <title>Fetch POST 요청</title>
+    <style>
+      .btn-back {
+        display: inline-block;
+        margin-top: 24px;
+        padding: 10px 20px;
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+    </style>
   </head>
   <body>
+    <a href="index.html" class="btn-back">← 목록으로 돌아가기</a>
     <h2>로그인</h2>
     <input type="text" id="username" placeholder="유저네임" />
     <input type="password" id="password" placeholder="비밀번호" />
@@ -41,12 +54,8 @@
             const data = await res.json();
             // 로컬스토리지에 토큰 저장
             localStorage.setItem("token", data.data.token);
-
-            result.textContent =
-              "로그인 성공!\n토큰값: " +
-              data.data.token +
-              "\n\n" +
-              JSON.stringify(data, null, 2);
+            alert("로그인 성공");
+            location.replace("index.html");
             result.style.color = "green";
           } catch (error) {
             result.textContent = "에러: " + error.message;

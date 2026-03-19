@@ -17,7 +17,7 @@ async function loadPost() {
 
   try {
     if (token != null) {
-      isMyPost = CheckMyPost(token, postId);
+      isMyPost = await CheckMyPost(token, postId);
     }
 
     const res = await fetch(

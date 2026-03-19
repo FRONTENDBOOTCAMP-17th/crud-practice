@@ -69,6 +69,13 @@
         font-size: 14px;
       }
     </style>
+    <script>
+      const token = localStorage.getItem("token");
+      if (token == null) {
+        alert("글쓰기를 하려면 로그인 해야합니다.");
+        location.replace("index.html");
+      }
+    </script>
   </head>
   <body>
     <div class="container">
@@ -86,9 +93,8 @@
     </div>
 
     <script>
-      const token = localStorage.getItem("token");
+      //const token = localStorage.getItem("token");
       const result = document.getElementById("result");
-
       // 내 정보 불러오기
       async function loadMyInfo() {
         try {

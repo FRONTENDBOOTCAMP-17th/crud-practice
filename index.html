@@ -62,13 +62,26 @@
         border-radius: 5px;
         font-size: 14px;
       }
+      .hidden {
+        display: none;
+      }
+      #btnContainer {
+        display: contents;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header-flex">
         <h2>게시판 목록</h2>
-        <a href="write.html" class="btn-write">글쓰기</a>
+        <div>
+          <button id="logoutBtn" class="hidden btn-write">로그아웃</button>
+          <a href="login.html" id="loginBtn" class="btn-write">로그인</a>
+          <a href="register.html" id="registerBtn" class="btn-write"
+            >회원가입</a
+          >
+          <a href="write.html" class="btn-write">글쓰기</a>
+        </div>
       </div>
       <div id="message"></div>
       <div id="postList">
@@ -77,8 +90,21 @@
     </div>
 
     <script>
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const registerBtn = document.getElementById("registerBtn");
       const postList = document.getElementById("postList");
       const message = document.getElementById("message");
+
+      if (localStorage.getItem("token")) {
+        loginBtn.classList.add("hidden");
+        registerBtn.classList.add("hidden");
+        logoutBtn.classList.remove("hidden");
+      } else {
+        loginBtn.classList.remove("hidden");
+        registerBtn.classList.remove("hidden");
+        logoutBtn.classList.add("hidden");
+      }
 
       async function loadPosts() {
         try {
@@ -127,6 +153,13 @@
       }
 
       document.addEventListener("DOMContentLoaded", loadPosts);
+
+      logoutBtn.addEventListener("click", () => {
+        if (confirm("로그아웃 하시겠습니까?")) {
+          localStorage.removeItem("token");
+          location.reload();
+        }
+      });
     </script>
   </body>
 </html>
