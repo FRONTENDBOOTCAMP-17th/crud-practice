@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>글쓰기</title>
+    <style>
+      body {
+        padding: 20px;
+        font-family: sans-serif;
+        background: #f9f9f9;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+      }
+      .header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .write-box {
+        border: 1px solid #e1e4e8;
+        padding: 24px;
+        border-radius: 10px;
+        background-color: #fff;
+      }
+      .author-info {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 16px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 14px;
+        font-family: sans-serif;
+      }
+      textarea {
+        min-height: 200px;
+        resize: none;
+      }
+      .btn-submit {
+        padding: 10px 20px;
+        background: #000;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .btn-back {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #fff;
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      #result {
+        margin-top: 12px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-flex">
+        <h2>글쓰기</h2>
+        <a href="index.html" class="btn-back">← 목록으로</a>
+      </div>
+      <div class="write-box">
+        <p class="author-info" id="nickname"></p>
+        <input type="text" id="title" placeholder="제목을 입력하세요" />
+        <textarea id="content" placeholder="내용을 입력하세요"></textarea>
+        <button class="btn-submit" id="submitBtn">게시글 발행</button>
+        <p id="result"></p>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const postId = params.get("id");
+
+      const token = localStorage.getItem("token");
+      const result = document.getElementById("result");
+      const title = document.getElementById("title");
+      const content = document.getElementById("content");
+      const submitBtn = document.getElementById("submitBtn");
+
+      // 내 정보 불러오기
+      async function loadMyInfo() {
+        try {
+          const res = await fetch(
+            "https://api.fullstackfamily.com/api/edu/ws-1c07e0/auth/me",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+            },
+          );
+
+          const { data } = await res.json();
+          document.getElementById("nickname").textContent =
+            "작성자: " + data.nickname;
+        } catch (error) {
+          console.error("에러:", error.message);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadMyInfo);
+
+      title.value = localStorage.getItem("title");
+      content.value = localStorage.getItem("content");
+
+      submitBtn.addEventListener("click", async () => {
+        const modifyData = {
+          title: title.value,
+          content: content.value,
+        };
+
+        try {
+          const res = await fetch(
+            "https://api.fullstackfamily.com/api/edu/ws-dbd822/posts/" + postId,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(modifyData),
+            },
+          );
+
+          if (!res.ok) {
+            throw new Error("게시글 수정 오류: " + res.status);
+          }
+          localStorage.removeItem("title");
+          localStorage.removeItem("content");
+          window.location.replace(`detail.html?id=${postId}`);
+        } catch (error) {
+          result.textContent = "에러: " + error.message;
+          result.style.color = "red";
+        }
+      });
+    </script>
+  </body>
+</html>

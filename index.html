@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>게시판 목록</title>
+    <style>
+      body {
+        padding: 20px;
+        font-family: sans-serif;
+        background: #f9f9f9;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+      }
+      .post-item {
+        border: 1px solid #e1e4e8;
+        padding: 20px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+        background-color: #fff;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      .post-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+      .post-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+      }
+      .post-preview {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 8px;
+      }
+      .post-meta {
+        font-size: 13px;
+        color: #777;
+        display: flex;
+        gap: 12px;
+      }
+      .post-date {
+        font-size: 12px;
+        color: #999;
+        margin-top: 6px;
+      }
+      .header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .btn-write {
+        padding: 10px 20px;
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-flex">
+        <h2>게시판 목록</h2>
+        <a href="write.html" class="btn-write">글쓰기</a>
+      </div>
+      <div id="message"></div>
+      <div id="postList">
+        <p>글을 불러오는 중입니다...</p>
+      </div>
+    </div>
+
+    <script>
+      const postList = document.getElementById("postList");
+      const message = document.getElementById("message");
+
+      async function loadPosts() {
+        try {
+          const res = await fetch(
+            "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts",
+            { method: "GET" },
+          );
+
+          if (!res.ok) {
+            throw new Error("HTTP 오류: " + res.status);
+          }
+
+          const resJson = await res.json();
+          const posts = resJson.data.content;
+
+          if (!posts || posts.length === 0) {
+            postList.innerHTML = "<p>등록된 게시글이 없습니다.</p>";
+            return;
+          }
+
+          postList.innerHTML = "";
+
+          posts.forEach((post) => {
+            const [date, time] = post.createdAt.split("T");
+            const item = document.createElement("div");
+            item.className = "post-item";
+            item.innerHTML = `
+              <div class="post-title">${post.title}</div>
+              <div class="post-preview">${post.contentPreview}</div>
+              <div class="post-meta">
+                <span>👤 ${post.authorNickname}</span>
+                <span>👀 조회 ${post.viewCount}</span>
+                <span>💬 댓글 ${post.commentCount}</span>
+              </div>
+              <div class="post-date">🕐 ${date} ${time}</div>
+            `;
+            item.onclick = () => {
+              location.href = `detail.html?id=${post.id}`;
+            };
+            postList.appendChild(item);
+          });
+        } catch (error) {
+          message.textContent = "에러: " + error.message;
+          postList.innerHTML = "";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadPosts);
+    </script>
+  </body>
+</html>
