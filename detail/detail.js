@@ -5,6 +5,8 @@ const postEl = document.getElementById("post");
 const params = new URLSearchParams(window.location.search);
 const postId = params.get("id");
 let isMyPost = false;
+const commentsPost = document.getElementById("commentsPost");
+const commentsBtn = document.getElementById("commentsBtn");
 
 async function loadPost() {
   if (!postId) {
@@ -92,3 +94,32 @@ async function loadPost() {
 }
 
 document.addEventListener("DOMContentLoaded", loadPost);
+commentsBtn.addEventListener("click", async function () {
+  if (commentsPost.value.length === 0) {
+    alert("댓글 내용을 입력해주세요!");
+    return;
+  }
+
+  const data = { content: commentsPost.value };
+
+  try {
+    const resComment = await fetch(
+      "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/" +
+        postId +
+        "/comments",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    if (!resComment.ok) {
+      throw new Error("에러 : " + resComment.status);
+    }
+  } catch (error) {
+    console.log("에러 메세지" + error.message);
+  }
+});
