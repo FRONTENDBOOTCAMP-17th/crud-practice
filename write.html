@@ -109,6 +109,10 @@
             },
           );
 
+          if (!res.ok) {
+            throw new Error("내 정보 불러오기 실패 : " + res.status);
+          }
+
           const { data } = await res.json();
           document.getElementById("nickname").textContent =
             "작성자: " + data.nickname;

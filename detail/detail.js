@@ -1,3 +1,4 @@
+import AddComent from "./AddComent.js";
 import CheckMyPost from "./CheckMyPost.js";
 import RoadComments from "./RoadComments.js";
 
@@ -56,7 +57,7 @@ async function loadPost() {
       deletePost.textContent = "삭제하기";
 
       editPost.addEventListener("click", function () {
-        window.location.replace(`/editPost.html?id=${postId}`);
+        window.location.replace(`editPost.html?id=${postId}`);
       });
 
       deletePost.addEventListener("click", async function () {
@@ -105,29 +106,7 @@ commentsBtn.addEventListener("click", async function () {
     return;
   }
 
-  const data = { content: commentsPost.value };
+  const result = await AddComent(token, postId, commentsPost.value);
 
-  try {
-    const resComment = await fetch(
-      "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/" +
-        postId +
-        "/comments",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      },
-    );
-
-    if (!resComment.ok) {
-      throw new Error("에러 : " + resComment.status);
-    }
-
-    location.reload();
-  } catch (error) {
-    console.log("에러 메세지" + error.message);
-  }
+  if (result) location.reload();
 });
