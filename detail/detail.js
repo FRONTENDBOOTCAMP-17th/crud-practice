@@ -1,37 +1,37 @@
-import AddComent from "./AddComent.js";
-import CheckMyPost from "./CheckMyPost.js";
-import RoadComments from "./RoadComments.js";
+import AddComent from './AddComent.js';
+import CheckMyPost from './CheckMyPost.js';
+import RoadComments from './RoadComments.js';
 
-const token = localStorage.getItem("token");
-const postEl = document.getElementById("post");
+const token = localStorage.getItem('token');
+const postEl = document.getElementById('post');
 const params = new URLSearchParams(window.location.search);
-const postId = params.get("id");
+const postId = params.get('id');
 let isMyPost = false;
-const commentsPost = document.getElementById("commentsPost");
-const commentsBtn = document.getElementById("commentsBtn");
+const commentsPost = document.getElementById('commentsPost');
+const commentsBtn = document.getElementById('commentsBtn');
 
 async function loadPost() {
   if (!postId) {
-    postEl.innerHTML = "<p>잘못된 접근입니다.</p>";
+    postEl.innerHTML = '<p>잘못된 접근입니다.</p>';
     return;
   }
 
   try {
-    if (token != null) {
+    if (token !== null) {
       isMyPost = await CheckMyPost(token, postId);
     }
 
     const res = await fetch(
-      "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/" + postId,
+      'https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/' + postId,
     );
 
     if (!res.ok) {
-      throw new Error("HTTP 오류: " + res.status);
+      throw new Error('HTTP 오류: ' + res.status);
     }
 
     const resJson = await res.json();
     const post = resJson.data;
-    const [date, time] = post.createdAt.split("T");
+    const [date, time] = post.createdAt.split('T');
 
     postEl.innerHTML = `
             <div class="post-box">
@@ -49,25 +49,27 @@ async function loadPost() {
     if (isMyPost) {
       const frag = document.createDocumentFragment();
 
-      const editPost = document.createElement("button");
-      editPost.id = "editPost";
-      editPost.textContent = "수정하기";
-      const deletePost = document.createElement("button");
-      deletePost.id = "deletePost";
-      deletePost.textContent = "삭제하기";
+      const editPost = document.createElement('button');
+      editPost.id = 'editPost';
+      editPost.textContent = '수정하기';
+      const deletePost = document.createElement('button');
+      deletePost.id = 'deletePost';
+      deletePost.textContent = '삭제하기';
 
-      editPost.addEventListener("click", function () {
+      editPost.addEventListener('click', function () {
         window.location.replace(`editPost.html?id=${postId}`);
       });
 
-      deletePost.addEventListener("click", async function () {
-        if (!confirm("정말로 삭제하시겠습니까?")) return;
+      deletePost.addEventListener('click', async function () {
+        if (!confirm('정말로 삭제하시겠습니까?')) {
+          return;
+        }
 
         try {
           const res = await fetch(
-            "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/" + postId,
+            'https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/' + postId,
             {
-              method: "DELETE",
+              method: 'DELETE',
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -75,38 +77,40 @@ async function loadPost() {
           );
 
           if (!res.ok) {
-            throw new Error("삭제 실패: " + res.status);
+            throw new Error('삭제 실패: ' + res.status);
           }
-          alert("삭제가 완료되었습니다.");
-          location.replace("index.html");
+          alert('삭제가 완료되었습니다.');
+          location.replace('index.html');
         } catch (error) {
-          postEl.innerHTML = "<p>에러: " + error.message + "</p>";
+          postEl.innerHTML = '<p>에러: ' + error.message + '</p>';
         }
       });
 
       frag.appendChild(editPost);
       frag.appendChild(deletePost);
 
-      const postBox = document.querySelector(".post-box");
+      const postBox = document.querySelector('.post-box');
       postBox.appendChild(frag);
     }
   } catch (error) {
-    postEl.innerHTML = "<p>에러: " + error.message + "</p>";
+    postEl.innerHTML = '<p>에러: ' + error.message + '</p>';
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadPost);
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener('DOMContentLoaded', loadPost);
+document.addEventListener('DOMContentLoaded', async function () {
   await RoadComments(postId);
 });
 
-commentsBtn.addEventListener("click", async function () {
+commentsBtn.addEventListener('click', async function () {
   if (commentsPost.value.length === 0) {
-    alert("댓글 내용을 입력해주세요!");
+    alert('댓글 내용을 입력해주세요!');
     return;
   }
 
   const result = await AddComent(token, postId, commentsPost.value);
 
-  if (result) location.reload();
+  if (result) {
+    location.reload();
+  }
 });
