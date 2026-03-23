@@ -90,47 +90,47 @@
     </div>
 
     <script>
-      const loginBtn = document.getElementById("loginBtn");
-      const logoutBtn = document.getElementById("logoutBtn");
-      const registerBtn = document.getElementById("registerBtn");
-      const postList = document.getElementById("postList");
-      const message = document.getElementById("message");
+      const loginBtn = document.getElementById('loginBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const postList = document.getElementById('postList');
+      const message = document.getElementById('message');
 
-      if (localStorage.getItem("token")) {
-        loginBtn.classList.add("hidden");
-        registerBtn.classList.add("hidden");
-        logoutBtn.classList.remove("hidden");
+      if (localStorage.getItem('token')) {
+        loginBtn.classList.add('hidden');
+        registerBtn.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
       } else {
-        loginBtn.classList.remove("hidden");
-        registerBtn.classList.remove("hidden");
-        logoutBtn.classList.add("hidden");
+        loginBtn.classList.remove('hidden');
+        registerBtn.classList.remove('hidden');
+        logoutBtn.classList.add('hidden');
       }
 
       async function loadPosts() {
         try {
           const res = await fetch(
-            "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts",
-            { method: "GET" },
+            'https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts',
+            { method: 'GET' },
           );
 
           if (!res.ok) {
-            throw new Error("HTTP 오류: " + res.status);
+            throw new Error('HTTP 오류: ' + res.status);
           }
 
           const resJson = await res.json();
           const posts = resJson.data.content;
 
           if (!posts || posts.length === 0) {
-            postList.innerHTML = "<p>등록된 게시글이 없습니다.</p>";
+            postList.innerHTML = '<p>등록된 게시글이 없습니다.</p>';
             return;
           }
 
-          postList.innerHTML = "";
+          postList.innerHTML = '';
 
           posts.forEach((post) => {
-            const [date, time] = post.createdAt.split("T");
-            const item = document.createElement("div");
-            item.className = "post-item";
+            const [date, time] = post.createdAt.split('T');
+            const item = document.createElement('div');
+            item.className = 'post-item';
             item.innerHTML = `
               <div class="post-title">${post.title}</div>
               <div class="post-preview">${post.contentPreview}</div>
@@ -147,16 +147,16 @@
             postList.appendChild(item);
           });
         } catch (error) {
-          message.textContent = "에러: " + error.message;
-          postList.innerHTML = "";
+          message.textContent = '에러: ' + error.message;
+          postList.innerHTML = '';
         }
       }
 
-      document.addEventListener("DOMContentLoaded", loadPosts);
+      document.addEventListener('DOMContentLoaded', loadPosts);
 
-      logoutBtn.addEventListener("click", () => {
-        if (confirm("로그아웃 하시겠습니까?")) {
-          localStorage.removeItem("token");
+      logoutBtn.addEventListener('click', () => {
+        if (confirm('로그아웃 하시겠습니까?')) {
+          localStorage.removeItem('token');
           location.reload();
         }
       });

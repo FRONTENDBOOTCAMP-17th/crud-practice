@@ -14,13 +14,13 @@
 export default async function AddComent(token, postId, content) {
   try {
     const res = await fetch(
-      "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/" +
+      'https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/' +
         postId +
-        "/comments",
+        '/comments',
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(content),
@@ -28,12 +28,12 @@ export default async function AddComent(token, postId, content) {
     );
 
     if (!res.ok) {
-      throw new Error("에러 : " + res.status);
+      throw new Error('에러 : ' + res.status);
     }
 
     return true;
   } catch (error) {
-    console.log("에러 메세지" + error.message);
+    console.log('에러 메세지' + error.message);
     return false;
   }
 }

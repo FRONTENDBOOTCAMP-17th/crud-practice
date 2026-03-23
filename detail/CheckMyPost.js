@@ -12,18 +12,18 @@
  */
 export default async function CheckMyPost(token, postId) {
   const res = await fetch(
-    "https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/my",
+    'https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/my',
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     },
   );
 
   if (!res.ok) {
-    throw new Error("HTTP 오류: " + res.status);
+    throw new Error('HTTP 오류: ' + res.status);
   }
   const { data } = await res.json();
 

@@ -8,33 +8,33 @@
  *
  */
 export default async function RoadComments(postId) {
-  const comments = document.getElementById("comments");
+  const comments = document.getElementById('comments');
   const res = await fetch(
     `https://api.fullstackfamily.com/api/edu/ws-1c07e0/posts/${postId}/comments`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     },
   );
 
   if (!res.ok) {
-    throw new Error("오류: " + res.status);
+    throw new Error('오류: ' + res.status);
   }
   const { data } = await res.json();
 
   if (!data || data.length === 0) {
-    comments.innerHTML = "<p>등록된 댓글이 없습니다.</p>";
+    comments.innerHTML = '<p>등록된 댓글이 없습니다.</p>';
     return;
   }
 
-  comments.innerHTML = "";
+  comments.innerHTML = '';
 
   data.forEach((post) => {
-    const [date, time] = post.createdAt.split("T");
-    const item = document.createElement("div");
-    item.className = "comment-item";
+    const [date, time] = post.createdAt.split('T');
+    const item = document.createElement('div');
+    item.className = 'comment-item';
     item.innerHTML = `
               <div class="comment-author">${post.authorNickname}</div>
               <div class="comment-date"> ${date} ${time}</div>
